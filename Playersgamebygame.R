@@ -1,0 +1,174 @@
+#' Plot all shots allowed by a team
+#'
+#' Plots team shot locations from one game or multiple games.
+#'
+#' @param game_ids Vector of ESPN game_ids
+#' @param team Team Name
+#' @param heatmap Use a density-type heatmap (Default = FALSE)
+#' @export
+opp_shot_chart <- function(game_ids, team, heatmap = F) {
+  if(any(is.na(game_ids))) {
+    error("game_ids missing with no default")
+  }
+  if(any(is.na(team))) {
+    error("team missing with no default")
+  }
+  df <- get_shot_locs(game_ids)
+  
+  if(!is.null(df)) {
+    side_one <- court %>% filter(side == 1)
+    team_shots <- df %>% filter(!team_name %in% c(team, dict$ESPN_PBP[dict$ESPN == team]))
+    
+    ### flip shots if they are on the wrong side
+    team_shots[team_shots$y > 47, "x"] <- 50 - team_shots[team_shots$y > 47, "x"]
+    team_shots[team_shots$y > 47, "y"] <- 94 - team_shots[team_shots$y > 47, "y"]
+    
+    ### only pick one color
+    color <- as.character(unique(team_shots$color))[1]
+    
+    if(heatmap){
+      p1 <-
+        ggplot2::ggplot() +
+        ggplot2::stat_density_2d(data = team_shots,
+                                 aes(x = x, y = y, fill = stat(density / max(density))),
+                                 geom = "raster", contour = FALSE, interpolate = TRUE, n = 200) +
+        ggplot2::geom_polygon(data = side_one, aes(x = x, y = y, group = group), col = "gray") +
+        ggplot2::geom_point(alpha = 0.2, size = 1.5) +
+        ggplot2::coord_equal() +
+        ggplot2::xlab("") +
+        ggplot2::ylab("")   +
+        ggplot2::scale_fill_viridis_c("Shot Frequency",
+                                      limits = c(0, 1),
+                                      breaks = c(0, 1),
+                                      labels = c("Lower", "Higher"),
+                                      option = "plasma") +
+        ggplot2::theme_void() +
+        ggplot2::theme(
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.title = element_blank(),
+          plot.title = element_text(size = 16, hjust = 0.5),
+          plot.subtitle = element_text(size = 12, hjust = 0.5),
+          plot.caption = element_text(size = 8, hjust = 0)) +
+        ggplot2::labs(
+          title = paste(team, "Shots Against"),
+          shape = "Shot Outcome",
+          caption = "Meyappan Subbaiah (@msubbaiah1) Data Accessed via ncaahoopR")
+      return(p1)
+    }
+    
+    p1 <-
+      suppressMessages(ggplot2::ggplot() +
+                         ggplot2::geom_point(data = team_shots,
+                                             aes(
+                                               x = x,
+                                               y = y,
+                                               shape = outcome),
+                                             color = color,
+                                             size = 3) +
+                         ggplot2::geom_polygon(data = side_one, aes(x = x, y = y, group = group), col = "gray") +
+                         ggplot2::geom_point(alpha = 0.2, size = 1.5) +
+                         ggplot2::scale_color_manual(values = color) +
+                         ggplot2:: xlab("") +
+                         ggplot2::ylab("")  +
+                         ggplot2::theme_void() +
+                         ggplot2::theme(
+                           axis.text.x = element_blank(),
+                           axis.text.y = element_blank(),
+                           axis.ticks.x = element_blank(),
+                           axis.ticks.y = element_blank(),
+                           axis.title = element_blank(),
+                           plot.title = element_text(size = 16, hjust = 0.5),
+                           plot.subtitle = element_text(size = 12, hjust = 0.5),
+                           plot.caption = element_text(size = 8, hjust = 0),
+                           plot.background = element_rect(fill = 'cornsilk')) +
+                         ggplot2::labs(
+                           title = paste0(team, " Shots Against"),
+                           shape = "Shot Outcome",
+                           caption = "Meyappan Subbaiah (@msubbaiah1) Data Accessed via ncaahoopR"))
+    return(p1)
+  }
+}
+packages = c("shiny", "tidyverse", "hexbin")
+install.packages(packages, repos = "https://cran.rstudio.com/")
+library(shiny)
+runGitHub("ballr", "toddwschneider")
+
+players_url = "https://stats.nba.com/stats/commonallplayers?LeagueID=00&Season=2020-21&IsOnlyCurrentSeason=0"
+
+request_headers = c(
+  "Accept" = "application/json, text/plain, */*",
+  "Accept-Language" = "en-US,en;q=0.8",
+  "Cache-Control" = "no-cache",
+  "Connection" = "keep-alive",
+  "Host" = "stats.nba.com",
+  "Pragma" = "no-cache",
+  "Referer" = "https://www.nba.com/",
+  "Upgrade-Insecure-Requests" = "1",
+  "User-Agent" = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9"
+)
+
+request = GET(players_url, add_headers(request_headers))
+
+players_data = fromJSON(content(request, as = "text"))
+players = as_tibble(data.frame(players_data$resultSets$rowSet[[1]], stringsAsFactors = FALSE))
+names(players) = tolower(players_data$resultSets$headers[[1]])
+
+players = mutate(players,
+                 person_id = as.numeric(person_id),
+                 rosterstatus = as.logical(as.numeric(rosterstatus)),
+                 from_year = as.numeric(from_year),
+                 to_year = as.numeric(to_year),
+                 team_id = as.numeric(team_id)
+)
+
+if (Sys.Date() <= as.Date("2017-10-20")) {
+  players = mutate(players, to_year = pmin(to_year, 2016))
+}
+
+players$name = sapply(players$display_last_comma_first, function(s) {
+  paste(rev(strsplit(s, ", ")[[1]]), collapse = " ")
+})
+
+first_year_of_data = 1996
+last_year_of_data = max(players$to_year)
+season_strings = paste(first_year_of_data:last_year_of_data,
+                       substr(first_year_of_data:last_year_of_data + 1, 3, 4),
+                       sep = "-")
+names(season_strings) = first_year_of_data:last_year_of_data
+
+available_players = filter(players, to_year >= first_year_of_data)
+
+names_table = table(available_players$name)
+dupe_names = names(names_table[which(names_table > 1)])
+
+available_players$name[available_players$name %in% dupe_names] = paste(
+  available_players$name[available_players$name %in% dupe_names],
+  available_players$person_id[available_players$name %in% dupe_names]
+)
+
+available_players$lower_name = tolower(available_players$name)
+available_players = arrange(available_players, lower_name)
+
+find_player_by_name = function(n) {
+  filter(available_players, lower_name == tolower(n))
+}
+
+find_player_id_by_name = function(n) {
+  find_player_by_name(n)$person_id
+}
+
+default_player = find_player_by_name("LeBron James")
+default_years = as.character(default_player$from_year:default_player$to_year)
+default_seasons = as.character(season_strings[default_years])
+
+default_season_ix = ifelse(as.numeric(format(Sys.Date(), "%m")) %in% 6:12, 2, 1)
+default_season = rev(default_seasons)[default_season_ix]
+
+default_season_type = "Regular Season"
+
+player_photo_url = function(player_id) {
+  paste0("https://stats.nba.com/media/players/230x185/", player_id, ".png")
+}
