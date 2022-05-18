@@ -21,6 +21,7 @@ Feature Engineering — what additional metrics can we append to our datasets th
 Data Analysis — can we determine any collinearity or other relations within the data that may better inform our predictions?
 Predictions – The results of a 7-game series for the eight remaining teams. Outcome for each game in the series.  Then predict both Easter and Western conference finals champion winners.  These two teams will then compete for the final series outcome of the NBA Conference final. It will be key to determine which models and features would be most beneficial for us in developing an accurate prediction for each game in the series? Do we focus on team or aggregated individuals’ statistics and matchups?
 
+Resources: https://www.nbastuffer.com/2021-2022-nba-player-stats/
 
 GitHub Repository. https://github.com/Save-the-Panda-s/FinalProject.git
 
