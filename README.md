@@ -25,7 +25,9 @@ Predictions – The results of a 7-game series for the eight remaining teams. Ou
 
 GitHub Repository. https://github.com/Save-the-Panda-s/FinalProject.git
 
-## Logistic Regression Machine Learning Model
+## Machine Learning Model
+- Logistic Regression 
+- Neural Network
 
 
 ## Database: 
