@@ -15,13 +15,15 @@ b.	This would be the input to generate the scores from the Team Data frame.
 Logic - Defensive 
 
 ## The following steps will outline the process:
-Identify Relevant Data – preferably team and player data where we gather the relevant team and player statistics of the remaining team.  Data we could use to identify team and player tendencies to predict the final results.
-Clean and Processing the Data – based on the data we select we will have to clean the data for efficient outcomes.  Useable data to analyze tendencies for each matchup series based team and player matchups. 
-Feature Engineering — what additional metrics can we append to our datasets that would help any user or ML model to better understand and predict, respectively, outcomes and trends from the data?
-Data Analysis — can we determine any collinearity or other relations within the data that may better inform our predictions?
-Predictions – The results of a 7-game series for the eight remaining teams. Outcome for each game in the series.  Then predict both Easter and Western conference finals champion winners.  These two teams will then compete for the final series outcome of the NBA Conference final. It will be key to determine which models and features would be most beneficial for us in developing an accurate prediction for each game in the series? Do we focus on team or aggregated individuals’ statistics and matchups?
+- Identify Relevant Data – preferably team and player data where we gather the relevant team and player statistics of the remaining team.  Data we could use to identify team and player tendencies to predict the final results.
+- Clean and Processing the Data – based on the data we select we will have to clean the data for efficient outcomes.  Useable data to analyze tendencies for each matchup series based team and player matchups. 
+- Feature Engineering — what additional metrics can we append to our datasets that would help any user or ML model to better understand and predict, respectively, outcomes and trends from the data?
+- Data Analysis — can we determine any collinearity or other relations within the data that may better inform our predictions?
+- Predictions – The results of a 7-game series for the eight remaining teams. Outcome for each game in the series.  Then predict both Eastern and Western conference finals champion winners.  These two teams will then compete for the final series outcome of the NBA Conference final. It will be key to determine which models and features would be most beneficial for us in developing an accurate prediction for each game in the series? Do we focus on team or aggregated individuals’ statistics and matchups?
 
-## Resources: https://www.nbastuffer.com/2021-2022-nba-player-stats/
+## Resources: 
+- https://www.nbastuffer.com/2021-2022-nba-player-stats/
+- www.basketball-reference.com
 
 GitHub Repository. https://github.com/Save-the-Panda-s/FinalProject.git
 
