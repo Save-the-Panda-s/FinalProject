@@ -30,6 +30,7 @@ GitHub Repository. https://github.com/Save-the-Panda-s/FinalProject.git
 - Logistic Regression 
 - Neural Network
 
+https://public.tableau.com/app/profile/bobby6661/viz/NBA_16533301189790/Dashboard1
 
 ## Database: 
 PgAdmin/ AWS Server to host Database
