@@ -172,3 +172,5 @@ default_season_type = "Regular Season"
 player_photo_url = function(player_id) {
   paste0("https://stats.nba.com/media/players/230x185/", player_id, ".png")
 }
+
+##add
