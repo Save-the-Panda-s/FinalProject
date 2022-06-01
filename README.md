@@ -1,7 +1,7 @@
 # FinalProject
 The goal of our final project is to utilized player and team information and use Machine learning to predict the 2022 NBA Finals Champions. Currently, the remaining teams in the playoff are Miami Heat, Philadelphia 76ers, Boston Celtics, Milwaukee Bucks in the Eastern Conference.  Phoenix Suns, Dallas Mavericks, Memphis Grizzlies and Golden State Warriors in the Western Conference. Our goal is to predict the outcome of each game withing the series. Each series consists of a potential 7-games. With the winning teams meeting up for the Easter and Western conference 7-game series.  The winner of the Conference game series will face off for the NBA Conference finals another 7-games series.  The winner would be the 2022 NBA Champions.  Who will it be?  
 
-## Logic  - Offense
+## Logic
 1.	Create a Data frame for each Players shot chart selection for each of the 8 rotational players 
 a.	Total of 8 individuals Shot charts DFs
 2.	Create a Team Data Frame by appending each of the players shot chart selections.
@@ -12,7 +12,6 @@ b.	This would be the input to generate the scores from the Team Data frame.
 5.	By game elimination we reduce the teams in each series.
 6.	Then by elimination we will have the final 2 teams.  
 7.	The last game we will predict the winning team and score.
-Logic - Defensive 
 
 ## The following steps will outline the process:
 - Identify Relevant Data – preferably team and player data where we gather the relevant team and player statistics of the remaining team.  Data we could use to identify team and player tendencies to predict the final results.
